@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+    <array name="mayNewItemIcon">
+        <item>#ffffe6</item>
+        <item>#ffffcc</item>
+        <item>#E2510E</item>
+        <item>#A73F04</item>
+        <item>#358A18</item>
+        <item>#227007</item>
+        <item>#1E51A8</item>
+        <item>#093F8A</item>
+        <item>#3B21AF</item>
+        <item>#2A2070</item>
+        <item>#690315</item>
+        <item>#2E000F</item>
+        <item>#2E000F</item>
+        <item>#2E000F</item>
+        <item>#2E000F</item>
+        <item>#2E000F</item>
+        <item>#2E000F</item>
+        <item>#2E000F</item>
+        <item>#2E000F</item>
+        <item>#2E000F</item>
+
+    </array>
+
+</resources>
