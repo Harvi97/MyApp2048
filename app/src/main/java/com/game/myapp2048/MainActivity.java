@@ -12,6 +12,7 @@ import android.widget.GridView;
 
 public class MainActivity extends AppCompatActivity {
     MediaPlayer mysong;
+
     private GridView gdvGamePlay;
     private OSoAdapter OSoAdapter;
     private View.OnTouchListener listener;
@@ -21,12 +22,16 @@ public class MainActivity extends AppCompatActivity {
     private Button button3;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {//При создании
         super.onCreate(savedInstanceState);
+
         mysong = MediaPlayer.create(MainActivity.this,R.raw.music);
         mysong.setLooping(true);
+
         setContentView(R.layout.activity_main);
-        Datagame.getDatagame().getMau(this);
+
+        Datagame.getDatagame().getColorAndEmpyPlace(this);
+
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -71,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         anhXa();
-        khoiTao();
+        initialization();
         setData();
     }
 
@@ -80,8 +85,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void khoiTao(){
-        Datagame.getDatagame().intt();
+    private void initialization(){
+        Datagame.getDatagame().Initialization();
         OSoAdapter= new OSoAdapter(MainActivity.this,0,Datagame.getDatagame().getArr());
 
         listener= new View.OnTouchListener() {

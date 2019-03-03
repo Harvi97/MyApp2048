@@ -10,36 +10,21 @@ import java.util.Random;
 public class Datagame {
     private static Datagame datagame;
     private ArrayList<Integer> arr = new ArrayList<>();
-    private int[] mangMau;
-    private int[][] arrSo = new int[4][4];
-    private int[][] mangLui = new int[4][4];
-    private boolean khoau = true;
-    private int so0 = 14, soDiem = 400;
-    private boolean khoa = true;
+    private int[] ColorArray; //Массив цветов
+    private int[][] NumberArray = new int[4][4]; //Массив Номеров
+    private int СurrentResult; //soDiem - Количество очков(балов) набраных
+    private boolean BlockRandom = true; //Опять блокировка?
     private Random r = new Random();
-    private int so=2;
 
-    static {
+    static {//Блок инициализации переменных при статическом вызове
         datagame = new Datagame();
     }
 
 
 
-    private void khoiTao() {
-        khoa = true;
-        soDiem = 0;
-        so0 = 14;
-    }
-
-    private void setMangLui() {
-        if (!khoau) {
-            return;
-        }
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                mangLui[i][j] = arrSo[i][j];
-            }
-        }
+    private void InitializationLocalParametrs() {//Инициализация
+        BlockRandom = true;//Блокировка
+        СurrentResult = 0; //Номер точки
     }
 
 
@@ -47,17 +32,19 @@ public class Datagame {
         return datagame;
     }
 
-    public void getMau(Context context) {
-        khoiTao();
-        TypedArray ta = context.getResources().obtainTypedArray(R.array.mayNewItemIcon);
-        mangMau = new int[ta.length()];
-        for (int i = 0; i < ta.length(); i++) {
-            mangMau[i] = ta.getColor(i, 0);
+    public void getColorAndEmpyPlace(Context context) {//получить цвета и очистить поле. Метод инициализационный
+        InitializationLocalParametrs();
+
+        TypedArray ta = context.getResources().obtainTypedArray(R.array.mayNewItemIcon);//Получаем цвет политру
+        ColorArray = new int[ta.length()];//Создаем массив для всех цветов
+        for (int i = 0; i < ta.length(); i++) {//По порядку
+            ColorArray[i] = ta.getColor(i, 0);//Выдаем цвет
         }
-        ta.recycle();
-        for (int i = 0; i < 4; i++) {
+        ta.recycle();//Удаляем политру
+
+        for (int i = 0; i < 4; i++) {//ДЛя всех элементов поля
             for (int j = 0; j < 4; j++) {
-                arrSo[i][j] = 0;
+                NumberArray[i][j] = 0;//Присваиваем пустоту
             }
         }
 
@@ -65,34 +52,34 @@ public class Datagame {
 
 
 
-    public void content() {
-        arr.clear();
+    public void content() {//После отработки жеста и перемещения во внутреннем массиве элементов, передаем их в ArrayList
+        arr.clear();       //На котором завязан механизм визуализации
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                arr.add(arrSo[i][j]);
+                arr.add(NumberArray[i][j]);
             }
         }
     }
 
 
-    public void intt() {
+    public void Initialization() {
         Random();
         arr.clear();
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                arr.add(arrSo[i][j]);
+                arr.add(NumberArray[i][j]);
             }
         }
     }
 
-    public int colorr(int so) {
-        if (so == 0) {
+    public int colorr(int number) {//Метод меняет фон плитки
+        if (number == 0) {
             return Color.WHITE;
         } else {
-            int a = (int) (Math.log(so) / Math.log(2));
-            return mangMau[a - 1];
+            int a = (int) (Math.log(number) / Math.log(2));
+            return ColorArray[a - 1];
         }
-    }//Метод зміни кольору цифри на плиткі після двох кроків
+    }
 
     public ArrayList<Integer> getArr() {
 
@@ -100,64 +87,63 @@ public class Datagame {
     }
 
     private void Random() {
-        if(!khoa){
+        if(!BlockRandom){
             return;
         }
 
-        so0=0;
+        int Counter=0;//Счетчик
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                if (arrSo[i][j] == 0) {
-                    so0++;
+                if (NumberArray[i][j] == 0) {
+                    Counter++;//Считаем сколько свободных клеток без цифр
                 }
 
             }
         }
-        int so = 2;
-        if (so0 == 1) {
-            so = 1;
-        } else if (so0 == 0) {
-            so = 0;
+        int number = 2;
+        if (Counter == 1) {//Если мы можем создать только 1
+            number = 1;//Генерим 1 рандомную точку
+        } else if (Counter == 0) {//Есили поле не пустое
+            number = 0;//Ничего не рандомим
         } else {
-            so = 1 + r.nextInt(2);
+            number = 1 + r.nextInt(2);//Если нет, рандомим от 1 до 2
         }
-        while (so != 0) {
-            int x = r.nextInt(4), y = r.nextInt(4);
-            if (arrSo[x][y] == 0) {
-                int k = r.nextInt(46) + 10;
-                if (k % 10 == 0) {
-                    arrSo[x][y] = 4;
-                    this.soDiem=this.soDiem+4;
+        while (number != 0) {//Пока мы можем что-то сгенерить
+            int x = r.nextInt(4), y = r.nextInt(4);//Генерим случайные кординаты
+            if (NumberArray[x][y] == 0) {//Если эти кординаты пустые
+                int k = r.nextInt(46) + 10;//Генерим вероятность сгенерировать четверку
+                if (k % 10 == 0) {//Проверяем вероятность
+                    NumberArray[x][y] = 4;//Добавляем 4 на поле
+                    this.СurrentResult=this.СurrentResult+4;//Добавляем очки
                 } else {
-                    this.soDiem=this.soDiem+2;
-                    arrSo[x][y] = 2;
+                    this.СurrentResult=this.СurrentResult+2;//Добавляем 2 очка
+                    NumberArray[x][y] = 2;//Добавляем двойку на поле
                 }
-                so--;
+                number--;//Понижаем счетчик количества сколько нужно еще сгенерить чисел
             }
         }
-        khoa=false;
+        BlockRandom=false;
     }//Метод для рандомного появлення плиток номіналом 2 та 4
 
 
     public void runLeft() {
-        so0 = 0;
-        setMangLui();
-        khoau = false;
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                int h = arrSo[i][j];
-                if (h == 0) {
-                    continue;
+        //setMangLui();
+        BlockRandom = false;//БЛОКИРУЕМ РАНДОМ ЕСЛИ МЫ НЕ НАЙДЕМ ВОЗМОЖНЫЙ ХОД
+        for (int i = 0; i < 4; i++) {//Для каждой строки
+            for (int j = 0; j < 4; j++) {//Для каждого элемента этой строки
+                int CheckedValue = NumberArray[i][j];//Запоминаем текущий элемент
+                if (CheckedValue == 0) {//Для элементов которые
+                    continue;// не равны нулю
                 } else {
-                    int st =j+1;
-                    for (int k = st; k < 4; k++) {
-                        int sox = arrSo[i][k];
-                        if (sox == 0) {
-                            continue;
-                        } else if (sox == h) {
-                            arrSo[i][j] = 2 * h;
-                            arrSo[i][k] = 0;
-                            khoau = true;
+                    int Current =j+1;//Указатель текущего элемента прохода
+                    for (int k = Current; k < 4; k++) {
+                        int NumberRight = NumberArray[i][k];//Запоминаем элемент справа
+                        if (NumberRight == 0) {
+                            continue;//Если элемент пустой - переходим на следущий
+                        } else if (NumberRight == CheckedValue) {//Если элемент справа равен проверяемому элементу
+                            NumberArray[i][j] = 2 * CheckedValue;//Устанавливаем значение элемента слева умноженым на 2
+                            NumberArray[i][k] = 0;//Удаляем элемент который переместили
+                            BlockRandom = true;//РАЗБЛАКИРОВКА РАНДОМА
                             break;
                         } else {
                             break;
@@ -167,49 +153,48 @@ public class Datagame {
             }
         }
 
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                int h = arrSo[i][j];
-                if (h != 0) {
-                    continue;
+        for (int i = 0; i < 4; i++) {//Для каждой строки
+            for (int j = 0; j < 4; j++) {//Для каждого элемента этой строки
+                int CheckedValue = NumberArray[i][j];//Запоминаем текущий элемент
+                if (CheckedValue != 0) {//Для элементов которые
+                    continue;//равны нулю
                 } else {
-                    for (int k = j + 1; k < 4; k++) {
-                        if (arrSo[i][k] == 0) {
-                            continue;
-                        } else {
-                            arrSo[i][j] = arrSo[i][k];
-                            arrSo[i][k] = 0;
-                            khoa = true;
+                    for (int k = j + 1; k < 4; k++) {//Проходим по всем элементам этой строки
+                        if (NumberArray[i][k] == 0) {//Если пустой
+                            continue;//Пропускаем
+                        } else {//Если с значением
+                            NumberArray[i][j] = NumberArray[i][k];//Копируем элемент справа в левую ячейку
+                            NumberArray[i][k] = 0;//Удаляем скопированый элемент
+                            BlockRandom = true;//РАЗБЛОКИРУЕМ РАНДОМ
                             break;
                         }
                     }
                 }
             }
         }
-        Random();
-        content();
+        Random();//Вызываем Рандом новых чисел
+        content();//Отображаем на дисплее
 
     }//Метод руху в ліво
 
     public void runRight() {
-        so0 = 0;
-        setMangLui();
-        khoau = false;
+        //setMangLui();
+        BlockRandom = false;
         for (int i = 3; i >= 0; i--) {
             for (int j = 3; j >= 0; j--) {
-                int h = arrSo[i][j];
-                if (h == 0) {
+                int CheckedValue = NumberArray[i][j];
+                if (CheckedValue == 0) {
                     continue;
                 } else {
-                    int st = j - 1;
-                    for (int k = st; k >= 0; k--) {
-                        int g = arrSo[i][k];
-                        if (g == 0) {
+                    int Current = j - 1;
+                    for (int k = Current; k >= 0; k--) {
+                        int NumberLeft = NumberArray[i][k];
+                        if (NumberLeft == 0) {
                             continue;
-                        } else if (g == h) {
-                            arrSo[i][j] = 2 * h;
-                            arrSo[i][k] = 0;
-                            khoau = true;
+                        } else if (NumberLeft == CheckedValue) {
+                            NumberArray[i][j] = 2 * CheckedValue;
+                            NumberArray[i][k] = 0;
+                            BlockRandom = true;
                             break;
                         } else {
                             break;
@@ -221,17 +206,17 @@ public class Datagame {
 
         for (int i = 0; i < 4; i++) {
             for (int j = 3; j >= 0; j--) {
-                int h = arrSo[i][j];
-                if (h != 0) {
+                int CheckedValue = NumberArray[i][j];
+                if (CheckedValue != 0) {
                     continue;
                 } else {
                     for (int k = j - 1; k >= 0; k--) {
-                        if (arrSo[i][k] == 0) {
+                        if (NumberArray[i][k] == 0) {
                             continue;
                         } else {
-                            arrSo[i][j] = arrSo[i][k];
-                            arrSo[i][k] = 0;
-                            khoa = true;
+                            NumberArray[i][j] = NumberArray[i][k];
+                            NumberArray[i][k] = 0;
+                            BlockRandom = true;
                             break;
                         }
                     }
@@ -246,25 +231,24 @@ public class Datagame {
     }//Метод руху в право
 
     public void runUp() {
-        so0 = 0;
-        setMangLui();
-        khoau = false;
+        //setMangLui();
+        BlockRandom = false;
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                int h = arrSo[j][i];
-                if (h == 0) {
+                int CheckedValue = NumberArray[j][i];
+                if (CheckedValue == 0) {
 
                     continue;
                 } else {
-                    int st = j + 1;
-                    for (int k = st; k < 4; k++) {
-                        int g = arrSo[k][i];
-                        if (g == 0) {
+                    int Current = j + 1;
+                    for (int k = Current; k < 4; k++) {
+                        int NumberDown = NumberArray[k][i];
+                        if (NumberDown == 0) {
                             continue;
-                        } else if (g == h) {
-                            arrSo[j][i] = 2 * h;
-                            arrSo[k][i] = 0;
-                            khoau = true;
+                        } else if (NumberDown == CheckedValue) {
+                            NumberArray[j][i] = 2 * CheckedValue;
+                            NumberArray[k][i] = 0;
+                            BlockRandom = true;
                             break;
                         } else {
                             break;
@@ -275,17 +259,17 @@ public class Datagame {
         }
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                int h = arrSo[j][i];
-                if (h != 0) {
+                int CheckedValue = NumberArray[j][i];
+                if (CheckedValue != 0) {
                     continue;
                 } else {
                     for (int k = j + 1; k < 4; k++) {
-                        if (arrSo[k][i] == 0) {
+                        if (NumberArray[k][i] == 0) {
                             continue;
                         } else {
-                            arrSo[j][i] = arrSo[k][i];
-                            arrSo[k][i] = 0;
-                            khoa = true;
+                            NumberArray[j][i] = NumberArray[k][i];
+                            NumberArray[k][i] = 0;
+                            BlockRandom = true;
                             break;
                         }
                     }
@@ -300,25 +284,24 @@ public class Datagame {
     }//Метод руху в гору
 
     public void runDown() {
-        so0 = 0;
-        setMangLui();
-        khoau = false;
+        //setMangLui();
+        BlockRandom = false;
         for (int i = 3; i >= 0; i--) {
             for (int j = 3; j >= 0; j--) {
-                int h = arrSo[j][i];
-                if (h == 0) {
+                int CheckedValue = NumberArray[j][i];
+                if (CheckedValue == 0) {
 
                     continue;
                 } else {
-                    int st = j - 1;
-                    for (int k = st; k >= 0; k--) {
-                        int g = arrSo[k][i];
-                        if (g == 0) {
+                    int Current = j - 1;
+                    for (int k = Current; k >= 0; k--) {
+                        int NumberUp = NumberArray[k][i];
+                        if (NumberUp == 0) {
                             continue;
-                        } else if (g == h) {
-                            arrSo[j][i] = 2 * h;
-                            arrSo[k][i] = 0;
-                            khoau = true;
+                        } else if (NumberUp == CheckedValue) {
+                            NumberArray[j][i] = 2 * CheckedValue;
+                            NumberArray[k][i] = 0;
+                            BlockRandom = true;
                             break;
                         } else {
                             break;
@@ -330,17 +313,17 @@ public class Datagame {
 
         for (int i = 0; i < 4; i++) {
             for (int j = 3; j >= 0; j--) {
-                int h = arrSo[j][i];
-                if (h != 0) {
+                int CheckedValue = NumberArray[j][i];
+                if (CheckedValue != 0) {
                     continue;
                 } else {
                     for (int k = j - 1; k >= 0; k--) {
-                        if (arrSo[k][i] == 0) {
+                        if (NumberArray[k][i] == 0) {
                             continue;
                         } else {
-                            arrSo[j][i] = arrSo[k][i];
-                            arrSo[k][i] = 0;
-                            khoa = true;
+                            NumberArray[j][i] = NumberArray[k][i];
+                            NumberArray[k][i] = 0;
+                            BlockRandom = true;
                             break;
                         }
                     }

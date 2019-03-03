@@ -33,7 +33,6 @@
                 android:id="@+id/button3"
                 android:layout_width="43dp"
                 android:layout_height="43dp"
-                android:background="100% Transparent Background"
                 android:onClick="onClick"
                 android:padding="5dp"
                 tools:ignore="OnClick" />
