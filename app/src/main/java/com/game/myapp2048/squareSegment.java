@@ -11,48 +11,49 @@ import android.util.AttributeSet;
 import android.widget.TextView;
 
 @SuppressLint("AppCompatCustomView")
-public class OVuong extends TextView {
-    public OVuong(Context context) {
+public class squareSegment extends TextView {
+    public squareSegment(Context context) {
         super(context);
     }
 
-    public OVuong(Context context, @Nullable AttributeSet attrs) {
+    public squareSegment(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public OVuong(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public squareSegment(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        int dai=getMeasuredWidth();
-        setMeasuredDimension(dai,dai);
+        int currentSize=getMeasuredWidth();
+        setMeasuredDimension(currentSize,currentSize);
     }
+
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public void setTett(int so) {
-        if (so < 100) {
+    public void formSquare(int number) {
+        if (number < 100) {
             setTextSize(40);
-        } else if (so < 1000) {
+        } else if (number < 1000) {
             setTextSize(35);
         } else {
             setTextSize(30);
         }
-        if (so >= 8) {
+        if (number >= 8) {
             setTextColor(Color.WHITE);
         } else {
             setTextColor(Color.BLACK);
         }
         GradientDrawable drawable = (GradientDrawable) this.getBackground();
-        drawable.setColor(Datagame.getDatagame().colorr(so));
+        drawable.setColor(Datagame.getDatagame().colorr(number));
         setBackground(drawable);
 
 
-        if (so == 0) {
+        if (number == 0) {
             setText(" ");
         } else {
-            setText("" + so);
+            setText("" + number);
         }
     }
 }

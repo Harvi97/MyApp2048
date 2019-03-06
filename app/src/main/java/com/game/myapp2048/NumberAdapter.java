@@ -12,11 +12,11 @@ import android.widget.ArrayAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OSoAdapter extends ArrayAdapter<Integer> {
+public class NumberAdapter extends ArrayAdapter<Integer> {
     private Context ct;
     private ArrayList<Integer> arr;
 
-    public OSoAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List<Integer> objects) {
+    public NumberAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List<Integer> objects) {
         super(context, resource, objects);
         this.ct=context;
         this.arr= new ArrayList<>(objects);
@@ -33,11 +33,11 @@ public class OSoAdapter extends ArrayAdapter<Integer> {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         if (convertView == null) {
             LayoutInflater inflater= (LayoutInflater)ct.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView=inflater.inflate(R.layout.item_o_vuong,null);
+            convertView=inflater.inflate(R.layout.item_square,null);
         }
         if (arr.size()>0){
-            OVuong o= (OVuong)convertView.findViewById(R.id.txvOVuong);
-            o.setTett(arr.get(position));
+            squareSegment o= (squareSegment)convertView.findViewById(R.id.squaresegment);
+            o.formSquare(arr.get(position));
         }
         return convertView;
     }

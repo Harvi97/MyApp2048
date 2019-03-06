@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
     MediaPlayer mysong;
 
     private GridView gdvGamePlay;
-    private OSoAdapter OSoAdapter;
+    private NumberAdapter numberAdapter;
     private View.OnTouchListener listener;
     private float X,Y;
     private Button button1;
@@ -75,19 +75,15 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        anhXa();
+        gdvGamePlay=(GridView)findViewById(R.id.qdvGamePlay);
         initialization();
         setData();
-    }
-
-    private void anhXa(){
-        gdvGamePlay=(GridView)findViewById(R.id.qdvGamePlay);
     }
 
 
     private void initialization(){
         Datagame.getDatagame().Initialization();
-        OSoAdapter= new OSoAdapter(MainActivity.this,0,Datagame.getDatagame().getArr());
+        numberAdapter= new NumberAdapter(MainActivity.this,0,Datagame.getDatagame().getArr());
 
         listener= new View.OnTouchListener() {
             @SuppressLint("SetTextI18n")
@@ -102,20 +98,20 @@ public class MainActivity extends AppCompatActivity {
                         if (Math.abs(event.getX()-X)>Math.abs(event.getY()-Y)){
                             if (event.getX() > X){
                                 Datagame.getDatagame().runRight();
-                                OSoAdapter.notifyDataSetChanged();
+                                numberAdapter.notifyDataSetChanged();
                             }else {
 
                                 Datagame.getDatagame().runLeft();
-                                OSoAdapter.notifyDataSetChanged();
+                                numberAdapter.notifyDataSetChanged();
                             }
                         }else {
                             if (event.getY() > Y) {
                                 Datagame.getDatagame().runDown();
-                                OSoAdapter.notifyDataSetChanged();
+                                numberAdapter.notifyDataSetChanged();
 
                             } else {
                                 Datagame.getDatagame().runUp();
-                                OSoAdapter.notifyDataSetChanged();
+                                numberAdapter.notifyDataSetChanged();
                             }
                         }
 
@@ -129,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
 
     @SuppressLint("ClickableViewAccessibility")
     private void setData(){
-        gdvGamePlay.setAdapter(OSoAdapter);
+        gdvGamePlay.setAdapter(numberAdapter);
         gdvGamePlay.setOnTouchListener(listener);
     }
 

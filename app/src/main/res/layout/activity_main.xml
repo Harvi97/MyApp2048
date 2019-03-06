@@ -35,7 +35,8 @@
                 android:layout_height="43dp"
                 android:onClick="onClick"
                 android:padding="5dp"
-                tools:ignore="OnClick" />
+                tools:ignore="OnClick"
+                android:background="@drawable/volum" />
 
 
         </LinearLayout>
