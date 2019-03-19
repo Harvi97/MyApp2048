@@ -3,11 +3,11 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-<com.game.myapp2048.squareSegment
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    android:background="@drawable/do_but_new"
-    android:id="@+id/squaresegment"
-    android:layout_margin="3dp"/>
+    <com.game.myapp2048.squareSegment
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:background="@drawable/do_but_new"
+        android:id="@+id/squaresegment"
+        android:layout_margin="3dp"/>
 </LinearLayout>

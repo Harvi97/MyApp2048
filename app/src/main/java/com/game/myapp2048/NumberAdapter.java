@@ -17,28 +17,28 @@ public class NumberAdapter extends ArrayAdapter<Integer> {
     private ArrayList<Integer> arr;
 
     public NumberAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List<Integer> objects) {
-        super(context, resource, objects);
-        this.ct=context;
-        this.arr= new ArrayList<>(objects);
+        super(context, resource, objects);//Визов супер конструктора для context, resource i object
+        this.ct=context;//Визов конструктора для context
+        this.arr= new ArrayList<>(objects);//Визов конструктора для arr і створення масиву обєктів
     }
 
     @Override
     public void notifyDataSetChanged() {
         arr=Datagame.getDatagame().getArr();
-        super.notifyDataSetChanged();
+        super.notifyDataSetChanged();//Визов конструктора
     }
 
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        if (convertView == null) {
+        if (convertView == null) {//Якщо convertView рівний null
             LayoutInflater inflater= (LayoutInflater)ct.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView=inflater.inflate(R.layout.item_square,null);
         }
-        if (arr.size()>0){
-            squareSegment o= (squareSegment)convertView.findViewById(R.id.squaresegment);
+        if (arr.size()>0){//Якщо arrSize більший 0
+            squareSegment o= (squareSegment) convertView.findViewById(R.id.squaresegment);
             o.formSquare(arr.get(position));
         }
-        return convertView;
+        return convertView;//Повертаєм значення convertView
     }
 }
